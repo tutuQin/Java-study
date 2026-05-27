@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第一章 数据类型</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="content">
+
+  <!-- 1.1 概览 -->
+  <section id="overview">
+    <h2>1.1 Java 数据类型概览</h2>
+    <p>Java 是<strong>强类型语言</strong>,任何变量必须先声明类型再使用。Java 数据类型分为两大类:</p>
+    <ul class="bullet">
+      <li><strong>基本数据类型(Primitive Type)</strong>:共 8 种,直接存储数值本身,存放在栈内存。</li>
+      <li><strong>引用数据类型(Reference Type)</strong>:如类、接口、数组、字符串等,变量存储的是对象在堆内存中的地址。</li>
+    </ul>
+    <pre>
+Java 数据类型
+├── 基本类型 (8 种)
+│   ├── 整数型: byte、short、int、long
+│   ├── 浮点型: float、double
+│   ├── 字符型: char
+│   └── 布尔型: boolean
+└── 引用类型
+    ├── 类 (Class) 如 String
+    ├── 接口 (Interface)
+    └── 数组 (Array)
+    </pre>
+    <div class="tip"><strong>💡 提示:</strong>基本类型不是对象,但 Java 为每一种基本类型都提供了对应的<strong>包装类</strong>(Wrapper Class)以支持面向对象操作。</div>
+  </section>
+
+  <!-- 1.2 基本数据类型 -->
+  <section id="primitive">
+    <h2>1.2 基本数据类型(Primitive Types)</h2>
+    <p>Java 共有 8 种基本数据类型,它们的字节数、取值范围都是固定的,不随操作系统而变化(这是 Java 跨平台的重要保证)。</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>数据类型</th>
+          <th>关键字</th>
+          <th>字节数</th>
+          <th>位数</th>
+          <th>取值范围</th>
+          <th>默认值</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td>字节型</td><td><code>byte</code></td><td>1</td><td>8</td><td>-128 ~ 127 (-2⁷ ~ 2⁷-1)</td><td>0</td></tr>
+        <tr><td>短整型</td><td><code>short</code></td><td>2</td><td>16</td><td>-32,768 ~ 32,767</td><td>0</td></tr>
+        <tr><td>整型</td><td><code>int</code></td><td>4</td><td>32</td><td>-2³¹ ~ 2³¹-1 (约 ±21 亿)</td><td>0</td></tr>
+        <tr><td>长整型</td><td><code>long</code></td><td>8</td><td>64</td><td>-2⁶³ ~ 2⁶³-1</td><td>0L</td></tr>
+        <tr><td>单精度浮点</td><td><code>float</code></td><td>4</td><td>32</td><td>±3.4×10³⁸ (约 7 位有效数字)</td><td>0.0f</td></tr>
+        <tr><td>双精度浮点</td><td><code>double</code></td><td>8</td><td>64</td><td>±1.7×10³⁰⁸ (约 15 位有效数字)</td><td>0.0d</td></tr>
+        <tr><td>字符型</td><td><code>char</code></td><td>2</td><td>16</td><td>0 ~ 65,535 (Unicode 字符)</td><td>' '</td></tr>
+        <tr><td>布尔型</td><td><code>boolean</code></td><td>1*</td><td>1</td><td>true / false</td><td>false</td></tr>
+      </tbody>
+    </table>
+    <div class="note"><strong>📌 说明:</strong>boolean 的实际占用大小由 JVM 实现决定,理论上仅需 1 bit,但通常按 1 字节存储,数组中则可能按 int(4 字节)对齐。</div>
+
+    <!-- 1.2.1 整数类型 -->
+    <h3 id="integer">1.2.1 整数类型(byte / short / int / long)</h3>
+    <p>Java 中所有整数类型都是<strong>有符号</strong>的(最高位为符号位)。默认整数字面量类型为 <code>int</code>,如需 <code>long</code> 必须在数字末尾加 <code>L</code>(推荐大写,小写 l 易与数字 1 混淆)。</p>
+    <pre>
+<span class="kw">public class</span> <span class="ty">IntegerDemo</span> {
+    <span class="kw">public static void</span> main(<span class="ty">String</span>[] args) {
+        <span class="kw">byte</span>  b = <span class="num">100</span>;            <span class="cmt">// -128 ~ 127</span>
+        <span class="kw">short</span> s = <span class="num">30000</span>;
+        <span class="kw">int</span>   i = <span class="num">2147483647</span>;     <span class="cmt">// int 最大值</span>
+        <span class="kw">long</span>  l = <span class="num">9999999999L</span>;    <span class="cmt">// 超过 int 范围必须加 L</span>
+
+        <span class="cmt">// 不同进制写法(JDK 7+)</span>
+        <span class="kw">int</span> dec = <span class="num">100</span>;            <span class="cmt">// 十进制</span>
+        <span class="kw">int</span> bin = <span class="num">0b1100100</span>;       <span class="cmt">// 二进制 0b 前缀</span>
+        <span class="kw">int</span> oct = <span class="num">0144</span>;            <span class="cmt">// 八进制 0 前缀</span>
+        <span class="kw">int</span> hex = <span class="num">0x64</span>;            <span class="cmt">// 十六进制 0x 前缀</span>
+
+        <span class="cmt">// 数字下划线分隔符(JDK 7+),便于阅读</span>
+        <span class="kw">long</span> big = <span class="num">1_000_000_000L</span>;
+    }
+}
+    </pre>
+    <div class="warning"><strong>⚠️ 注意:</strong>整数溢出不会抛出异常,而是发生回绕。例如 <code>Integer.MAX_VALUE + 1</code> 会得到 <code>Integer.MIN_VALUE</code>。</div>
+
+    <!-- 1.2.2 浮点类型 -->
+    <h3 id="float">1.2.2 浮点类型(float / double)</h3>
+    <p>Java 浮点数遵循 <strong>IEEE 754</strong> 标准。默认浮点字面量为 <code>double</code>,声明 <code>float</code> 必须在末尾加 <code>F</code> 或 <code>f</code>。</p>
+    <pre>
+<span class="kw">float</span>  f1 = <span class="num">3.14F</span>;          <span class="cmt">// 必须加 F</span>
+<span class="kw">double</span> d1 = <span class="num">3.14</span>;           <span class="cmt">// 默认就是 double</span>
+<span class="kw">double</span> d2 = <span class="num">3.14D</span>;          <span class="cmt">// 加 D 可选</span>
+
+<span class="cmt">// 科学计数法</span>
+<span class="kw">double</span> e1 = <span class="num">1.5e3</span>;          <span class="cmt">// 1500.0</span>
+<span class="kw">double</span> e2 = <span class="num">2.5E-2</span>;         <span class="cmt">// 0.025</span>
+
+<span class="cmt">// 特殊值</span>
+<span class="kw">double</span> inf = <span class="num">1.0</span> / <span class="num">0.0</span>;    <span class="cmt">// Infinity (正无穷)</span>
+<span class="kw">double</span> nan = <span class="num">0.0</span> / <span class="num">0.0</span>;    <span class="cmt">// NaN (Not a Number)</span>
+    </pre>
+    <div class="warning"><strong>⚠️ 精度陷阱:</strong>浮点数<strong>不能精确表示</strong>所有十进制小数。例如 <code>0.1 + 0.2 != 0.3</code>。需要精确计算(如金额)时,务必使用 <code>java.math.BigDecimal</code>。</div>
+    <pre>
+<span class="ty">System</span>.out.println(<span class="num">0.1</span> + <span class="num">0.2</span>);   <span class="cmt">// 输出: 0.30000000000000004</span>
+
+<span class="cmt">// 正确做法:使用 BigDecimal,且必须用字符串构造</span>
+<span class="ty">BigDecimal</span> a = <span class="kw">new</span> <span class="ty">BigDecimal</span>(<span class="str">"0.1"</span>);
+<span class="ty">BigDecimal</span> b = <span class="kw">new</span> <span class="ty">BigDecimal</span>(<span class="str">"0.2"</span>);
+<span class="ty">System</span>.out.println(a.add(b));   <span class="cmt">// 输出: 0.3</span>
+    </pre>
+
+    <!-- 1.2.3 字符类型 -->
+    <h3 id="char">1.2.3 字符类型(char)</h3>
+    <p><code>char</code> 占 2 字节,使用 <strong>Unicode 编码</strong>(UTF-16),可表示中文、英文、符号等。字符字面量用<strong>单引号</strong>包裹,且只能包含一个字符。</p>
+    <pre>
+<span class="kw">char</span> c1 = <span class="str">'A'</span>;             <span class="cmt">// 字符</span>
+<span class="kw">char</span> c2 = <span class="str">'中'</span>;             <span class="cmt">// 中文字符</span>
+<span class="kw">char</span> c3 = <span class="num">65</span>;              <span class="cmt">// 用整数赋值,自动转为 'A'</span>
+<span class="kw">char</span> c4 = <span class="str">'A'</span>;         <span class="cmt">// Unicode 转义,等价于 'A'</span>
+<span class="kw">char</span> c5 = <span class="str">'\n'</span>;            <span class="cmt">// 转义字符:换行</span>
+
+<span class="cmt">// char 可参与运算,会自动转为 int</span>
+<span class="kw">int</span> sum = <span class="str">'A'</span> + <span class="num">1</span>;        <span class="cmt">// 结果是 int 66</span>
+<span class="kw">char</span> next = (<span class="kw">char</span>)(<span class="str">'A'</span> + <span class="num">1</span>); <span class="cmt">// 强制转换得到 'B'</span>
+    </pre>
+    <h4>常用转义字符</h4>
+    <table>
+      <thead><tr><th>转义</th><th>含义</th><th>转义</th><th>含义</th></tr></thead>
+      <tbody>
+        <tr><td><code>\n</code></td><td>换行</td><td><code>\\</code></td><td>反斜杠</td></tr>
+        <tr><td><code>\t</code></td><td>制表符</td><td><code>\'</code></td><td>单引号</td></tr>
+        <tr><td><code>\r</code></td><td>回车</td><td><code>\"</code></td><td>双引号</td></tr>
+        <tr><td><code>\b</code></td><td>退格</td><td><code>\uXXXX</code></td><td>Unicode 编码</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 1.2.4 布尔类型 -->
+    <h3 id="boolean">1.2.4 布尔类型(boolean)</h3>
+    <p>布尔类型只有两个值:<code>true</code> 和 <code>false</code>。Java 中布尔与整数<strong>不能</strong>相互转换(这与 C/C++ 不同)。</p>
+    <pre>
+<span class="kw">boolean</span> flag = <span class="kw">true</span>;
+<span class="kw">boolean</span> isReady = <span class="num">10</span> &gt; <span class="num">5</span>;   <span class="cmt">// 表达式结果</span>
+
+<span class="cmt">// ❌ 错误写法:不能用整数代替布尔</span>
+<span class="cmt">// if (1) { ... }   编译错误</span>
+
+<span class="kw">if</span> (flag) {
+    <span class="ty">System</span>.out.println(<span class="str">"执行了"</span>);
+}
+    </pre>
+  </section>
+
+  <!-- 1.3 引用类型 -->
+  <section id="reference">
+    <h2>1.3 引用数据类型(Reference Types)</h2>
+    <p>除 8 种基本类型外,其他都是引用类型。引用变量存储的是<strong>对象的内存地址</strong>(引用),对象本身存放在堆中。</p>
+    <ul class="bullet">
+      <li><strong>类(Class)</strong>:如 <code>String</code>、<code>Object</code>、自定义类等</li>
+      <li><strong>接口(Interface)</strong>:如 <code>List</code>、<code>Runnable</code></li>
+      <li><strong>数组(Array)</strong>:如 <code>int[]</code>、<code>String[]</code></li>
+    </ul>
+    <pre>
+<span class="ty">String</span> name = <span class="str">"Tom"</span>;          <span class="cmt">// 字符串</span>
+<span class="kw">int</span>[]  arr  = {<span class="num">1</span>, <span class="num">2</span>, <span class="num">3</span>};       <span class="cmt">// 数组</span>
+<span class="ty">Object</span> obj  = <span class="kw">new</span> <span class="ty">Object</span>();     <span class="cmt">// 对象</span>
+<span class="ty">List</span>&lt;<span class="ty">Integer</span>&gt; list = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;(); <span class="cmt">// 集合</span>
+
+<span class="ty">String</span> s = <span class="kw">null</span>;             <span class="cmt">// 引用类型可以为 null</span>
+    </pre>
+    <div class="tip"><strong>💡 区别:</strong>基本类型 <code>==</code> 比较的是值,引用类型 <code>==</code> 比较的是地址。比较内容应使用 <code>.equals()</code> 方法。</div>
+  </section>
+
+  <!-- 1.4 默认值 -->
+  <section id="default">
+    <h2>1.4 数据类型默认值</h2>
+    <p><strong>类的成员变量</strong>(字段)如果没有显式赋值,JVM 会自动赋予默认值;但<strong>局部变量</strong>没有默认值,使用前必须显式初始化。</p>
+    <table>
+      <thead><tr><th>类型</th><th>默认值</th></tr></thead>
+      <tbody>
+        <tr><td>byte, short, int, long</td><td><code>0</code></td></tr>
+        <tr><td>float</td><td><code>0.0f</code></td></tr>
+        <tr><td>double</td><td><code>0.0d</code></td></tr>
+        <tr><td>char</td><td><code>' '</code> (空字符)</td></tr>
+        <tr><td>boolean</td><td><code>false</code></td></tr>
+        <tr><td>引用类型</td><td><code>null</code></td></tr>
+      </tbody>
+    </table>
+    <pre>
+<span class="kw">public class</span> <span class="ty">DefaultDemo</span> {
+    <span class="kw">int</span> field;                <span class="cmt">// 成员变量,默认 0</span>
+    <span class="ty">String</span> name;             <span class="cmt">// 成员变量,默认 null</span>
+
+    <span class="kw">public void</span> test() {
+        <span class="kw">int</span> local;            <span class="cmt">// 局部变量,无默认值</span>
+        <span class="cmt">// System.out.println(local); ❌ 编译错误: variable local might not have been initialized</span>
+        local = <span class="num">10</span>;
+        <span class="ty">System</span>.out.println(local);
+    }
+}
+    </pre>
+  </section>
+
+  <!-- 1.5 类型转换 -->
+  <section id="conversion">
+    <h2>1.5 数据类型转换</h2>
+
+    <h3>① 自动类型转换(隐式转换)</h3>
+    <p>小范围类型 → 大范围类型,自动完成,不会丢失精度。</p>
+    <pre>
+byte → short → int → long → float → double
+              ↑
+            char →
+    </pre>
+    <pre>
+<span class="kw">int</span> i = <span class="num">100</span>;
+<span class="kw">long</span> l = i;          <span class="cmt">// int → long,自动转换</span>
+<span class="kw">double</span> d = l;        <span class="cmt">// long → double</span>
+
+<span class="kw">char</span> c = <span class="str">'A'</span>;
+<span class="kw">int</span> code = c;        <span class="cmt">// char → int,自动得到 65</span>
+    </pre>
+
+    <h3>② 强制类型转换(显式转换)</h3>
+    <p>大范围类型 → 小范围类型,必须显式强转,<strong>可能丢失精度或溢出</strong>。</p>
+    <pre>
+<span class="kw">double</span> d = <span class="num">3.99</span>;
+<span class="kw">int</span> i = (<span class="kw">int</span>) d;     <span class="cmt">// 结果是 3 (截断,非四舍五入)</span>
+
+<span class="kw">int</span> big = <span class="num">200</span>;
+<span class="kw">byte</span> b = (<span class="kw">byte</span>) big;  <span class="cmt">// byte 最大 127,结果溢出为 -56</span>
+
+<span class="kw">long</span> l = <span class="num">10000000000L</span>;
+<span class="kw">int</span> n = (<span class="kw">int</span>) l;     <span class="cmt">// 高位被截断</span>
+    </pre>
+
+    <h3>③ 表达式自动提升</h3>
+    <pre>
+<span class="kw">byte</span> a = <span class="num">1</span>, b = <span class="num">2</span>;
+<span class="cmt">// byte c = a + b;  ❌ 错误!a+b 自动提升为 int</span>
+<span class="kw">int</span>  c = a + b;       <span class="cmt">// ✅ 正确</span>
+<span class="kw">byte</span> d = (<span class="kw">byte</span>)(a + b); <span class="cmt">// ✅ 或强转</span>
+    </pre>
+    <div class="note"><strong>📌 规则:</strong>任何 <code>byte</code>、<code>short</code>、<code>char</code> 参与运算时都会先提升为 <code>int</code>。混合运算时,结果类型为参与运算的最高类型。</div>
+
+    <h3>④ 字符串与基本类型转换</h3>
+    <pre>
+<span class="cmt">// 基本类型 → 字符串</span>
+<span class="ty">String</span> s1 = <span class="ty">String</span>.valueOf(<span class="num">123</span>);
+<span class="ty">String</span> s2 = <span class="ty">Integer</span>.toString(<span class="num">123</span>);
+<span class="ty">String</span> s3 = <span class="num">123</span> + <span class="str">""</span>;             <span class="cmt">// 简便写法</span>
+
+<span class="cmt">// 字符串 → 基本类型(使用包装类的 parseXxx 方法)</span>
+<span class="kw">int</span>    n = <span class="ty">Integer</span>.parseInt(<span class="str">"123"</span>);
+<span class="kw">double</span> d = <span class="ty">Double</span>.parseDouble(<span class="str">"3.14"</span>);
+<span class="kw">boolean</span> b = <span class="ty">Boolean</span>.parseBoolean(<span class="str">"true"</span>);
+    </pre>
+  </section>
+
+  <!-- 1.6 包装类 -->
+  <section id="wrapper">
+    <h2>1.6 包装类(Wrapper Class)</h2>
+    <p>Java 为每种基本类型提供了对应的包装类,使基本类型也能以"对象"的形式参与运算(如放入集合、使用泛型等)。</p>
+    <table>
+      <thead><tr><th>基本类型</th><th>包装类</th><th>基本类型</th><th>包装类</th></tr></thead>
+      <tbody>
+        <tr><td><code>byte</code></td><td><code>Byte</code></td><td><code>float</code></td><td><code>Float</code></td></tr>
+        <tr><td><code>short</code></td><td><code>Short</code></td><td><code>double</code></td><td><code>Double</code></td></tr>
+        <tr><td><code>int</code></td><td><code>Integer</code></td><td><code>char</code></td><td><code>Character</code></td></tr>
+        <tr><td><code>long</code></td><td><code>Long</code></td><td><code>boolean</code></td><td><code>Boolean</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>自动装箱与拆箱(Autoboxing / Unboxing)</h3>
+    <p>JDK 5 引入了基本类型与包装类之间的自动转换。</p>
+    <pre>
+<span class="cmt">// 自动装箱: int → Integer</span>
+<span class="ty">Integer</span> i = <span class="num">100</span>;          <span class="cmt">// 等价于 Integer.valueOf(100)</span>
+
+<span class="cmt">// 自动拆箱: Integer → int</span>
+<span class="kw">int</span> n = i;                  <span class="cmt">// 等价于 i.intValue()</span>
+
+<span class="ty">List</span>&lt;<span class="ty">Integer</span>&gt; list = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+list.add(<span class="num">1</span>);                <span class="cmt">// 自动装箱</span>
+<span class="kw">int</span> first = list.get(<span class="num">0</span>);  <span class="cmt">// 自动拆箱</span>
+    </pre>
+    <div class="warning"><strong>⚠️ 注意:</strong>Integer 缓存了 -128 ~ 127 的对象,这个范围内 <code>==</code> 比较为 true,超出范围则为 false。比较 Integer 值请用 <code>.equals()</code> 或 <code>.intValue()</code>。</div>
+    <pre>
+<span class="ty">Integer</span> a = <span class="num">100</span>, b = <span class="num">100</span>;
+<span class="ty">System</span>.out.println(a == b);          <span class="cmt">// true  (缓存范围内)</span>
+
+<span class="ty">Integer</span> c = <span class="num">200</span>, d = <span class="num">200</span>;
+<span class="ty">System</span>.out.println(c == d);          <span class="cmt">// false (超出缓存)</span>
+<span class="ty">System</span>.out.println(c.equals(d));     <span class="cmt">// true  (正确比较)</span>
+    </pre>
+  </section>
+
+  <!-- 1.7 字面量 -->
+  <section id="literal">
+    <h2>1.7 字面量(Literal)</h2>
+    <p>字面量指代码中直接写出的固定值。</p>
+    <table>
+      <thead><tr><th>类型</th><th>示例</th><th>说明</th></tr></thead>
+      <tbody>
+        <tr><td>整数字面量</td><td><code>10</code>, <code>0b1010</code>, <code>012</code>, <code>0xA</code></td><td>默认 int,加 L 为 long</td></tr>
+        <tr><td>浮点字面量</td><td><code>3.14</code>, <code>3.14f</code>, <code>1.5e3</code></td><td>默认 double,加 F 为 float</td></tr>
+        <tr><td>字符字面量</td><td><code>'A'</code>, <code>'\n'</code>, <code>'A'</code></td><td>单引号,1 个字符</td></tr>
+        <tr><td>字符串字面量</td><td><code>"Hello"</code></td><td>双引号,引用类型</td></tr>
+        <tr><td>布尔字面量</td><td><code>true</code>, <code>false</code></td><td>只有两个值</td></tr>
+        <tr><td>空字面量</td><td><code>null</code></td><td>表示引用为空</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>Java 语法手册 - 首页</title>
+<link rel="stylesheet" href="style.css">
+<base target="_top">
+</head>
+<body>
+<main class="welcome">
+  <h1>☕ 欢迎使用 Java 语法手册</h1>
+  <p>这是一份系统化整理的 Java 基础语法学习手册,涵盖从数据类型到多线程的核心知识点。</p>
+  <p>点击左侧导航选择章节开始学习,每一节都包含详细的语法说明、代码示例、表格对比、以及常见陷阱提示。</p>
+
+  <h3 style="margin-top:32px;color:#04AA6D;border-left:4px solid #04AA6D;padding-left:10px;font-size:20px;">章节目录</h3>
+  <div class="chapter-grid">
+    <a class="chapter-card" href="chapter1.html#overview"><h4>第一章 数据类型</h4><p>基本类型 / 引用类型 / 包装类 / 类型转换</p></a>
+    <a class="chapter-card" href="chapter2.html#var-define"><h4>第二章 变量与常量</h4><p>变量定义 / 作用域 / 命名规范 / final</p></a>
+    <a class="chapter-card" href="chapter3.html#op-overview"><h4>第三章 运算符</h4><p>算术 / 逻辑 / 位运算 / 优先级</p></a>
+    <a class="chapter-card" href="chapter4.html#flow-overview"><h4>第四章 流程控制</h4><p>if / switch / for / while / break / continue</p></a>
+    <a class="chapter-card" href="chapter5.html"><h4>第五章 数组</h4><p>📝 待补充</p></a>
+    <a class="chapter-card" href="chapter6.html"><h4>第六章 方法</h4><p>📝 待补充</p></a>
+    <a class="chapter-card" href="chapter7.html#oop-overview"><h4>第七章 面向对象</h4><p>类与对象 / 继承 / 多态 / 接口 / 枚举</p></a>
+    <a class="chapter-card" href="chapter8.html"><h4>第八章 异常处理</h4><p>📝 待补充</p></a>
+    <a class="chapter-card" href="chapter9.html"><h4>第九章 集合框架</h4><p>📝 待补充</p></a>
+    <a class="chapter-card" href="chapter10.html"><h4>第十章 泛型</h4><p>📝 待补充</p></a>
+    <a class="chapter-card" href="chapter11.html"><h4>第十一章 Lambda 与 Stream</h4><p>📝 待补充</p></a>
+    <a class="chapter-card" href="chapter12.html"><h4>第十二章 IO 流</h4><p>📝 待补充</p></a>
+    <a class="chapter-card" href="chapter13.html"><h4>第十三章 多线程</h4><p>📝 待补充</p></a>
+  </div>
+
+  <div class="tip" style="margin-top:32px">
+    <strong>💡 使用提示:</strong>所有代码块都按照标准 Java 语法着色,关键字、类型、字符串、注释一目了然。文中带有 <strong>📌 注意</strong>、<strong>⚠️ 警告</strong>、<strong>💡 提示</strong> 三种标签,辅助理解。
+  </div>
+</main>
+
+<script>
+  // 章节卡片点击时,通知父页面切换 iframe
+  document.querySelectorAll('.chapter-card').forEach(card => {
+    card.addEventListener('click', e => {
+      e.preventDefault();
+      const href = card.getAttribute('href');
+      if (window.parent && window.parent !== window) {
+        const iframe = window.parent.document.querySelector('iframe[name="content"]');
+        if (iframe) iframe.src = href;
+      } else {
+        window.location.href = href;
+      }
+    });
+  });
+</script>
+</body>
+</html>

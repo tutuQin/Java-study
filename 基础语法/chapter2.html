@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>第二章 变量与常量</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="content">
+
+  <section id="variables">
+    <h2>第二章 变量与常量</h2>
+    <p>变量是程序中存储数据的"容器",其本质是<strong>内存中的一块命名区域</strong>。Java 是强类型语言,任何变量在使用前都必须先声明类型。</p>
+  </section>
+
+  <section id="var-define">
+    <h2>2.1 变量的定义</h2>
+    <p>声明变量需要三个要素:<strong>数据类型</strong>、<strong>变量名</strong>、<strong>初始值</strong>(可选)。</p>
+    <pre>
+<span class="cmt">// 语法格式: 数据类型 变量名 = 值;</span>
+<span class="kw">int</span> age = <span class="num">18</span>;                <span class="cmt">// 声明同时初始化</span>
+<span class="ty">String</span> name;                <span class="cmt">// 先声明</span>
+name = <span class="str">"Tom"</span>;                <span class="cmt">// 后赋值</span>
+
+<span class="cmt">// 一行声明多个同类型变量(不推荐,可读性差)</span>
+<span class="kw">int</span> a = <span class="num">1</span>, b = <span class="num">2</span>, c = <span class="num">3</span>;
+
+<span class="cmt">// JDK 10+ 局部变量类型推断 var</span>
+<span class="kw">var</span> message = <span class="str">"Hello"</span>;      <span class="cmt">// 自动推断为 String</span>
+<span class="kw">var</span> list = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;<span class="ty">Integer</span>&gt;(); <span class="cmt">// 推断为 ArrayList&lt;Integer&gt;</span>
+    </pre>
+    <div class="note"><strong>📌 注意:</strong>
+      <ul class="bullet">
+        <li>变量必须先声明、后使用</li>
+        <li>同一作用域内,变量名不能重复</li>
+        <li>局部变量必须先初始化才能使用</li>
+        <li><code>var</code> 只能用于<strong>局部变量</strong>,且声明时必须初始化</li>
+      </ul>
+    </div>
+  </section>
+
+  <section id="var-scope">
+    <h2>2.2 变量分类与作用域</h2>
+    <p>按照变量在类中的位置,可分为三类:</p>
+    <table>
+      <thead>
+        <tr><th>变量类型</th><th>声明位置</th><th>作用域</th><th>默认值</th><th>存储位置</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>成员变量(实例)</td><td>类中、方法外</td><td>整个类,跟随对象</td><td>有</td><td>堆</td></tr>
+        <tr><td>静态变量(类变量)</td><td>类中、加 <code>static</code></td><td>整个类,所有对象共享</td><td>有</td><td>方法区/元空间</td></tr>
+        <tr><td>局部变量</td><td>方法/代码块内</td><td>所属代码块</td><td>无,必须手动初始化</td><td>栈</td></tr>
+      </tbody>
+    </table>
+    <pre>
+<span class="kw">public class</span> <span class="ty">Student</span> {
+    <span class="kw">private</span> <span class="ty">String</span> name;            <span class="cmt">// 成员变量 (实例变量)</span>
+    <span class="kw">private static int</span> count;      <span class="cmt">// 静态变量 (类变量)</span>
+
+    <span class="kw">public void</span> study() {
+        <span class="kw">int</span> hours = <span class="num">2</span>;             <span class="cmt">// 局部变量</span>
+        <span class="kw">if</span> (hours &gt; <span class="num">0</span>) {
+            <span class="ty">String</span> book = <span class="str">"Java"</span>;    <span class="cmt">// 块级局部变量,仅在 if 内有效</span>
+            <span class="ty">System</span>.out.println(book);
+        }
+        <span class="cmt">// System.out.println(book); ❌ 此处无法访问 book</span>
+    }
+}
+    </pre>
+    <div class="tip"><strong>💡 作用域规则:</strong>变量的作用域从声明处开始,到包含它的最近一对大括号 <code>{}</code> 结束。</div>
+  </section>
+
+  <section id="var-naming">
+    <h2>2.3 命名规范</h2>
+    <h3>① 硬性规则(必须遵守,否则编译报错)</h3>
+    <ul class="bullet">
+      <li>由<strong>字母、数字、下划线 <code>_</code>、美元符 <code>$</code></strong>组成</li>
+      <li>不能以数字开头</li>
+      <li>不能使用 Java <strong>关键字</strong>和<strong>保留字</strong>(如 int、class、true)</li>
+      <li>严格<strong>区分大小写</strong>(<code>age</code> 与 <code>Age</code> 不同)</li>
+      <li>长度无限制,但建议简洁明了</li>
+    </ul>
+
+    <h3>② 软性规范(行业约定,提高可读性)</h3>
+    <table>
+      <thead><tr><th>类型</th><th>命名规则</th><th>示例</th></tr></thead>
+      <tbody>
+        <tr><td>类名 / 接口名</td><td>大驼峰(UpperCamelCase)</td><td><code>HelloWorld</code>, <code>UserService</code></td></tr>
+        <tr><td>变量名 / 方法名</td><td>小驼峰(lowerCamelCase)</td><td><code>userName</code>, <code>getCount()</code></td></tr>
+        <tr><td>常量名</td><td>全大写 + 下划线分隔</td><td><code>MAX_SIZE</code>, <code>PI</code></td></tr>
+        <tr><td>包名</td><td>全小写,以 <code>.</code> 分隔</td><td><code>com.example.demo</code></td></tr>
+      </tbody>
+    </table>
+    <pre>
+<span class="cmt">// ✅ 推荐</span>
+<span class="kw">int</span> studentAge = <span class="num">18</span>;
+<span class="kw">final double</span> PI = <span class="num">3.14159</span>;
+<span class="kw">public class</span> <span class="ty">UserService</span> { }
+
+<span class="cmt">// ❌ 不推荐</span>
+<span class="kw">int</span> a = <span class="num">18</span>;              <span class="cmt">// 命名无意义</span>
+<span class="kw">int</span> student_age = <span class="num">18</span>;    <span class="cmt">// 应使用小驼峰</span>
+<span class="kw">int</span> 2age = <span class="num">18</span>;            <span class="cmt">// ❌ 不能数字开头</span>
+<span class="kw">int</span> <span class="kw">class</span> = <span class="num">1</span>;           <span class="cmt">// ❌ 关键字</span>
+    </pre>
+  </section>
+
+  <section id="constant">
+    <h2>2.4 常量(final)</h2>
+    <p>常量是值<strong>不可改变</strong>的标识符,使用 <code>final</code> 关键字声明。一旦赋值,后续不能再修改。</p>
+    <pre>
+<span class="cmt">// ① 局部常量</span>
+<span class="kw">final int</span> MAX = <span class="num">100</span>;
+<span class="cmt">// MAX = 200; ❌ 编译错误: cannot assign a value to final variable</span>
+
+<span class="cmt">// ② 成员常量(实例常量)</span>
+<span class="kw">public class</span> <span class="ty">Circle</span> {
+    <span class="kw">public final double</span> radius;
+    <span class="kw">public</span> <span class="ty">Circle</span>(<span class="kw">double</span> r) {
+        <span class="kw">this</span>.radius = r;          <span class="cmt">// 可在构造方法中赋值</span>
+    }
+}
+
+<span class="cmt">// ③ 静态常量(全局常量)—— 最常用</span>
+<span class="kw">public class</span> <span class="ty">MathUtil</span> {
+    <span class="kw">public static final double</span> PI = <span class="num">3.14159265358979</span>;
+    <span class="kw">public static final int</span> MAX_USERS = <span class="num">1000</span>;
+}
+<span class="cmt">// 使用: MathUtil.PI</span>
+    </pre>
+
+    <h3>final 关键字的作用</h3>
+    <table>
+      <thead><tr><th>修饰对象</th><th>含义</th></tr></thead>
+      <tbody>
+        <tr><td>修饰<strong>变量</strong></td><td>变成常量,只能赋值一次</td></tr>
+        <tr><td>修饰<strong>方法</strong></td><td>不能被子类重写(override)</td></tr>
+        <tr><td>修饰<strong>类</strong></td><td>不能被继承,如 <code>String</code>、<code>Integer</code></td></tr>
+      </tbody>
+    </table>
+    <div class="warning"><strong>⚠️ 注意:</strong>对引用类型来说,<code>final</code> 只保证<strong>引用</strong>不变,不保证对象内容不变。
+      <pre>
+<span class="kw">final</span> <span class="ty">List</span>&lt;<span class="ty">Integer</span>&gt; list = <span class="kw">new</span> <span class="ty">ArrayList</span>&lt;&gt;();
+list.add(<span class="num">1</span>);                <span class="cmt">// ✅ 可以,内容可改</span>
+<span class="cmt">// list = new ArrayList&lt;&gt;(); ❌ 引用不可改</span>
+      </pre>
+    </div>
+  </section>
+
+  <section id="keywords">
+    <h2>2.5 关键字与保留字</h2>
+    <p>Java 共有 <strong>50 个关键字</strong> + <strong>2 个保留字</strong>(<code>goto</code>、<code>const</code>,目前未使用但禁止作为标识符)。三个特殊字面量 <code>true</code>、<code>false</code>、<code>null</code> 严格意义上不是关键字,但同样不能作为标识符。</p>
+    <table>
+      <thead><tr><th>分类</th><th>关键字</th></tr></thead>
+      <tbody>
+        <tr><td>数据类型</td><td><code>byte short int long float double char boolean void</code></td></tr>
+        <tr><td>流程控制</td><td><code>if else switch case default for while do break continue return</code></td></tr>
+        <tr><td>类与对象</td><td><code>class interface enum extends implements new this super instanceof</code></td></tr>
+        <tr><td>修饰符</td><td><code>public protected private static final abstract synchronized volatile transient native strictfp</code></td></tr>
+        <tr><td>异常处理</td><td><code>try catch finally throw throws</code></td></tr>
+        <tr><td>包相关</td><td><code>package import</code></td></tr>
+        <tr><td>其他</td><td><code>assert</code> (JDK 1.4+), <code>yield</code> (JDK 14+)</td></tr>
+        <tr><td>保留字</td><td><code>goto const</code></td></tr>
+        <tr><td>特殊字面量</td><td><code>true false null</code></td></tr>
+      </tbody>
+    </table>
+    <div class="note"><strong>📌 提示:</strong>JDK 10+ 的 <code>var</code> 和 JDK 14+ 的 <code>record</code>、<code>sealed</code> 是<strong>上下文关键字</strong>(reserved type names),在特定位置才有特殊含义,允许作为普通标识符使用(但不推荐)。</div>
+  </section>
+
+</main>
+</body>
+</html>
